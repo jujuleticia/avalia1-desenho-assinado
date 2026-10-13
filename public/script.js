@@ -1,5 +1,3 @@
-import { numeroValido } from "./desenho.js";
-
 const formulario = document.getElementById("formulario");
 const campoNumero = document.getElementById("numero");
 const area = document.getElementById("desenho");
@@ -22,7 +20,7 @@ formulario.addEventListener("submit", async (evento) => {
 
   const numero = Number(campoNumero.value);
 
-  if (!numeroValido(numero)) {
+  if (isNaN(numero) || numero < 1 || numero > 100) {
     mensagem.textContent = "Digite um inteiro entre 1 e 100.";
     return;
   }
@@ -35,9 +33,10 @@ formulario.addEventListener("submit", async (evento) => {
     const resposta = await fetch("/api/desenho", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${googleIdToken}`
       },
-      body: JSON.stringify({ numero, token: googleIdToken })
+      body: JSON.stringify({ numero })
     });
 
     if (resposta.status === 400) {
@@ -53,8 +52,7 @@ formulario.addEventListener("submit", async (evento) => {
       return;
     }
 
-    const dados = await resposta.json();
-    svgAtual = dados.svg;
+    svgAtual = await resposta.text();
     area.innerHTML = svgAtual;
     botaoBaixar.hidden = false;
   } catch (erro) {
