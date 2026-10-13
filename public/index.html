@@ -43,6 +43,18 @@
     <button id="baixar" type="button" hidden>Baixar SVG</button>
   </main>
 
-  <script type="module" src="script.js"></script>
+  <script>
+    // Função e variável globais exigidas pelo Google Identity Services
+    window.googleIdToken = "";
+    window.handleCredentialResponse = function(response) {
+      window.googleIdToken = response.credential;
+      const mensagem = document.getElementById("mensagem");
+      if (mensagem) {
+        mensagem.textContent = "Autenticado com sucesso pelo Google!";
+        mensagem.style.color = "green";
+      }
+    };
+  </script>
+  <script src="script.js"></script>
 </body>
 </html>
