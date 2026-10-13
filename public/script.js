@@ -5,13 +5,6 @@ const mensagem = document.getElementById("mensagem");
 const botaoBaixar = document.getElementById("baixar");
 
 let svgAtual = "";
-let googleIdToken = "";
-
-window.handleCredentialResponse = function(response) {
-  googleIdToken = response.credential;
-  mensagem.textContent = "Autenticado com sucesso pelo Google!";
-  mensagem.style.color = "green";
-};
 
 formulario.addEventListener("submit", async (evento) => {
   evento.preventDefault();
@@ -24,7 +17,9 @@ formulario.addEventListener("submit", async (evento) => {
     mensagem.textContent = "Digite um inteiro entre 1 e 100.";
     return;
   }
-  if (!googleIdToken) {
+  
+  // Valida o token global gerado pelo login do Google
+  if (!window.googleIdToken) {
     mensagem.textContent = "Por favor, faça login com o Google antes de desenhar.";
     return;
   }
@@ -34,7 +29,7 @@ formulario.addEventListener("submit", async (evento) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${googleIdToken}`
+        "Authorization": `Bearer ${window.googleIdToken}`
       },
       body: JSON.stringify({ numero })
     });
